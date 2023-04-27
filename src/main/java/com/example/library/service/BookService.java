@@ -20,19 +20,17 @@ public class BookService {
     private final CategoryService categoryService;
 
     public BookDTO addBook(@Valid BookDTO bookDTO, Long id) {
-        Book newBook = new Book();
         Category category = categoryService.findById(id);
-        newBook.setTitle(bookDTO.getTitle());
-        newBook.setAuthor(bookDTO.getAuthor());
-        newBook.setDescription(bookDTO.getDescription());
-        bookDTO.getCategories().add(category);
-        newBook.setCategories(bookDTO.getCategories());
+        Book newBook = new Book(null, bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getDescription());
+        newBook.getCategories().add(category);
+        ;
+        category.getBooks().add(newBook);
         bookRepository.save(newBook);
         return bookDTO;
     }
 
     public List<Book> findAllByCategory(Long id) {
-        return bookRepository.findByCategory(categoryService.findById(id));
+        return bookRepository.findByCategories(categoryService.findById(id));
     }
 
     public Book findById(Long id) {
@@ -42,15 +40,15 @@ public class BookService {
     }
 
     public void deleteById(Long id) {
-        if ( !bookRepository.existsById(id)) {
-			throw new ObjectNotFoundException("id " + id +" doesn't exist");}
-                bookRepository.deleteById(id);
+        if (!bookRepository.existsById(id)) {
+            throw new ObjectNotFoundException("id " + id + " doesn't exist");
+        }
+        bookRepository.deleteById(id);
     }
 
     public Book updateById(Long id, BookDTO book) {
         book.setId(id);
-        Book newBook = new Book(book.getId(), book.getTitle(), book.getAuthor(), book.getDescription(),
-                book.getCategories());
+        Book newBook = new Book(null, book.getTitle(), book.getAuthor(), book.getDescription());
         Category category = categoryService.findByBooks(newBook);
         newBook.getCategories().add(category);
         return bookRepository.save(newBook);
