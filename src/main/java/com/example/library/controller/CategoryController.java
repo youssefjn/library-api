@@ -28,54 +28,51 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
 public class CategoryController {
-    private final CategoryService categoryService ;
+    private final CategoryService categoryService;
+
     @GetMapping
-	public ResponseEntity<List<CategoryDTO>> findAll() {
-    List<Category> list = categoryService.findAll();
-    List<CategoryDTO> listDTO = list.stream().map(obj -> categoryService.fromDTO(obj)).collect(Collectors.toList());
-    return new ResponseEntity<>(listDTO, HttpStatus.OK);
+    public ResponseEntity<List<CategoryDTO>> findAll() {
+        List<Category> list = categoryService.findAll();
+        List<CategoryDTO> listDTO = list.stream().map(obj -> categoryService.fromDTO(obj)).collect(Collectors.toList());
+        return new ResponseEntity<>(listDTO, HttpStatus.OK);
 
-}
+    }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Category> findById(@PathVariable Long id) {
+        Category obj = categoryService.findById(id);
+        return new ResponseEntity<>(obj, HttpStatus.OK);
 
-@GetMapping(value = "/{id}")
-public ResponseEntity<Category> findById(@PathVariable Long id) {
-    Category obj = categoryService.findById(id);
-    return new ResponseEntity<>(obj, HttpStatus.OK);
+    }
 
-}
+    @PostMapping
+    public ResponseEntity<CategoryDTO> create(@Valid @RequestBody CategoryDTO objDTO) {
+        CategoryDTO newObj = categoryService.create(objDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(objDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(newObj);
+    }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CategoryDTO> updateAll(@PathVariable Long id, @Valid @RequestBody CategoryDTO objDto) {
+        objDto.setId(id);
+        Category newObj = categoryService.updateAll(objDto);
+        objDto = categoryService.fromDTO(newObj);
+        return new ResponseEntity<>(objDto, HttpStatus.OK);
 
-@PostMapping
-public ResponseEntity<CategoryDTO> create(@Valid @RequestBody CategoryDTO objDTO) {
-    CategoryDTO newObj = categoryService.create(objDTO);
-    URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(objDTO.getId()).toUri();
-    return ResponseEntity.created(uri).body(newObj);
-}
+    }
 
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryDTO objDto) {
+        objDto.setId(id);
+        Category newObj = categoryService.updateAll(objDto);
+        objDto = categoryService.fromDTO(newObj);
+        return new ResponseEntity<>(objDto, HttpStatus.OK);
+    }
 
-@PutMapping(value = "/{id}")
-public ResponseEntity<CategoryDTO> updateAll(@PathVariable Long id, @Valid @RequestBody CategoryDTO objDto) {
-    objDto.setId(id);
-    Category newObj = categoryService.updateAll(objDto);
-    objDto = categoryService.fromDTO(newObj);
-    return new ResponseEntity<>(objDto, HttpStatus.OK);
-
-}
-
-
-@PatchMapping(value = "/{id}")
-public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryDTO objDto) {
-    objDto.setId(id);
-    Category newObj = categoryService.updateAll(objDto);
-    objDto = categoryService.fromDTO(newObj);
-    return new ResponseEntity<>(objDto, HttpStatus.OK);
-}
-
-@DeleteMapping(value = "/{id}")
-public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-    categoryService.deleteById(id);
-    return new ResponseEntity<>( HttpStatus.OK);
-}
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        categoryService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

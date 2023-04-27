@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,9 +18,10 @@ public class CategoryDTO {
     @NotBlank(message = "Category name cannot be blank")
     @Size(min = 2, max = 50, message = "Category name must be at least 2 characters long and less than 50 characters")
     private String name;
+
     public CategoryDTO(Category category) {
         this.id = category.getId();
         this.name = category.getName();
     }
-    
+
 }

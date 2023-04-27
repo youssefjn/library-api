@@ -27,10 +27,10 @@ public class Category {
     private String name;
     @ManyToMany(mappedBy = "categories")
     private List<Book> books;
-    public Category(Long id,String name) {
+
+    public Category(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    
 }

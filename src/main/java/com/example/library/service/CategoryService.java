@@ -26,7 +26,7 @@ public class CategoryService {
     }
 
     public Category findByBooks(Book newBook) {
-        return categoryRepository.findByBook(newBook);
+        return categoryRepository.findByBooks(newBook);
     }
 
     public List<Category> findAll() {
@@ -35,7 +35,7 @@ public class CategoryService {
 
     public Category updateAll(CategoryDTO objDto) {
         Category newObj = new Category(objDto.getId(), objDto.getName());
-		return categoryRepository.save(newObj);    
+        return categoryRepository.save(newObj);
     }
 
     public CategoryDTO create(CategoryDTO objDTO) {
@@ -43,14 +43,14 @@ public class CategoryService {
         categoryRepository.save(newObj);
         return fromDTO(newObj);
     }
-    
+
     public void deleteById(Long id) {
-        if ( !categoryRepository.existsById(id)) {
-			throw new ObjectNotFoundException("id " + id +" doesn't exist");
+        if (!categoryRepository.existsById(id)) {
+            throw new ObjectNotFoundException("id " + id + " doesn't exist");
         }
-            categoryRepository.deleteById(id);
+        categoryRepository.deleteById(id);
     }
-    
+
     public CategoryDTO fromDTO(Category category) {
         return new CategoryDTO(category);
     }
