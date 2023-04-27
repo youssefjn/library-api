@@ -30,10 +30,17 @@ public class Book {
     @NotBlank(message = "The book description cannot be blank")
     private String author;
     @Column(length = 1000)
-    @Size(max = 1000,message = "the book description cannot be greater than 1000 characters")
+    @Size(max = 1000, message = "the book description cannot be greater than 1000 characters")
     private String description;
     @ManyToMany
     @JoinTable(name = "BOOK_CATEGORY", joinColumns = @JoinColumn(name = "BOOK_ID"), inverseJoinColumns = @JoinColumn(name = "CATEGORY_ID"))
     private List<Category> categories;
+
+    public Book(Long id, String title, String author, String description) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.description = description;
+    }
 
 }
